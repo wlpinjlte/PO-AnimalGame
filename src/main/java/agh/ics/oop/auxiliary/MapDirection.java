@@ -22,4 +22,17 @@ public enum MapDirection {
             case SOUTHWEST -> new Vector2d(-1,-1);
         };
     }
+
+    public MapDirection opposite(){
+        return switch(this){
+            case NORTH -> SOUTH;
+            case SOUTH -> NORTH;
+            case SOUTHWEST -> NORTHEAST;
+            case NORTHEAST -> SOUTHWEST;
+            case EAST -> WEST;
+            case WEST -> EAST;
+            case NORTHWEST -> SOUTHEAST;
+            case SOUTHEAST -> NORTHWEST;
+        };
+    }
 }
