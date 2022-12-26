@@ -1,6 +1,7 @@
 package agh.ics.oop.maps;
 
 import agh.ics.oop.auxiliary.Vector2d;
+import agh.ics.oop.mapElements.Animal;
 import agh.ics.oop.mapElements.IMapElement;
 import agh.ics.oop.mapElements.IPositionChangeObserver;
 
@@ -14,11 +15,12 @@ public class GlobeMap extends AbstractWorldMap{
     }
 
     @Override
-    public void positionChange(IMapElement element,Vector2d oldPosition, Vector2d newPosition){
+    public void positionChange(Animal element, Vector2d oldPosition, Vector2d newPosition){
         if(newPosition.precedes(endOfMap)&& newPosition.follows(startOfMap)){
             super.positionChange(element,oldPosition,newPosition);
-        }else{
+        }else {
             element.setDirection(element.getDirection().opposite());
+            element.setPosition(newPosition);
         }
     }
 }

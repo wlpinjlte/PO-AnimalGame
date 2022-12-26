@@ -1,6 +1,7 @@
 package agh.ics.oop.maps;
 
 import agh.ics.oop.auxiliary.Vector2d;
+import agh.ics.oop.mapElements.Animal;
 import agh.ics.oop.mapElements.IMapElement;
 import agh.ics.oop.mapElements.IPositionChangeObserver;
 
@@ -20,10 +21,12 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
             }
         }
     }
+    //dodalem setter pozycji zwierzecia
     @Override
-    public void positionChange(IMapElement elementToAdd, Vector2d oldPosition, Vector2d newPosition) {
+    public void positionChange(Animal elementToAdd, Vector2d oldPosition, Vector2d newPosition) {
         map.remove(oldPosition);
         map.get(newPosition).add(elementToAdd);
+        elementToAdd.setPosition(newPosition);
     }
 
     @Override
