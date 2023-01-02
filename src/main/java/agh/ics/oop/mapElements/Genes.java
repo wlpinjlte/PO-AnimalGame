@@ -3,6 +3,7 @@ package agh.ics.oop.mapElements;
 import java.util.LinkedList;
 
 public class Genes {
+    //to nie działa
     //z ustawien tu sie ustawi
     private int genomeLength;
     private LinkedList<Integer> genome;

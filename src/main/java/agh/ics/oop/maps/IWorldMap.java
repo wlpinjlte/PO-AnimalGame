@@ -1,16 +1,24 @@
 package agh.ics.oop.maps;
 
 import agh.ics.oop.auxiliary.Vector2d;
+import agh.ics.oop.mapElements.Animal;
+import agh.ics.oop.mapElements.FieldStats;
+import agh.ics.oop.mapElements.Grass;
 import agh.ics.oop.mapElements.IMapElement;
 
 import java.util.LinkedList;
 
 public interface IWorldMap {
-    void place(IMapElement animal);
-    void removeDeadAnimals(Vector2d positionToUpdate);
-    LinkedList<IMapElement> objectsAt(Vector2d position);
-    void growingGrass(Vector2d positionToUpdate);
+    void placeAnimal(Animal animal);
+    void removeDeadAnimals();
+    void growingGrass();
     void eatingGrass(Vector2d positionToUpdate);
     void multiplication(Vector2d positionToUpdate);
+    Vector2d getEndOfMap();
     void upadteMap();
+    FieldStats getFieldStatsPosition(Vector2d position);
+    void updateGrassField(Vector2d grassToPlace);
+    void moveAnimals();
+    void wys();
+    boolean grassStatus(Vector2d positionToCheck);
 }
