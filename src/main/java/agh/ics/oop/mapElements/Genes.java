@@ -1,29 +1,28 @@
 package agh.ics.oop.mapElements;
 
+import agh.ics.oop.CONSTANT;
+
 import java.util.LinkedList;
 
 public class Genes {
     //to nie działa
     //z ustawien tu sie ustawi
-    private int genomeLength;
+    private final int genomeLength = CONSTANT.GENOMELENGTH;
     private LinkedList<Integer> genome;
 
     public Integer getGene(int i){
         return this.genome.get(i);
     }
 
-    public int getGenomeLength() {
-        return genomeLength;
-    }
-
     public Genes() {
-        genome = new LinkedList<Integer>();
+        genome = new LinkedList<>();
         for (int l=genomeLength;l>0;l--){
-             genome.add((int)(Math.random()*genomeLength));
+             genome.add((int)(Math.random()*8));
         }
     }
     public Genes(Genes p1, Genes p2, int gS){
-        int threshold=gS/100*genomeLength;
+        genome = new LinkedList<>();
+        int threshold=(int)((float)gS/100*genomeLength);
         if (Math.random()<0.5){
             for (int i = 0,l=genomeLength;l>0;i++,threshold--,l--){
                 if (threshold>0){
@@ -36,11 +35,11 @@ public class Genes {
         }
         else{
             for (int i = 0,l=genomeLength; l>0;i++,threshold--,l--){
-                if (threshold<=0){
-                    genome.add(p1.getGene(i));
+                if (threshold>0){
+                    genome.add(p2.getGene(i));
                 }
                 else{
-                    genome.add(p2.getGene(i));
+                    genome.add(p1.getGene(i));
                 }
             }
         }

@@ -1,7 +1,8 @@
 package agh.ics.oop;
 
+
 import agh.ics.oop.maps.GlobeMap;
-import agh.ics.oop.maps.IWorldMap;
+
 
 public class Main {
     public static void main(String[] args) throws IllegalAccessException, InterruptedException {

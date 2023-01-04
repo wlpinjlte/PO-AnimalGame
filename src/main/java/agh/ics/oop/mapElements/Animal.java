@@ -38,10 +38,11 @@ public class Animal implements IMapElement {
     //wysyła zapytanie o zmiane pozycji do mapy
 //genom nie działa
     public void move() {
-//        int timesToTurn = genome.getGene(daysAlive%genome.getGenomeLength());
-//        for (; timesToTurn > 0; timesToTurn--) {
-//            orientation = orientation.next(orientation);
-//        }
+        int timesToTurn = genome.getGene(daysAlive%CONSTANT.GENOMELENGTH);
+        for (; timesToTurn > 0; timesToTurn--) {
+            orientation = orientation.next(orientation);
+        }
+        addToSurvivalCounter();
         positionChanged(position, position.add(orientation.toUnitVector()));
     }
     public void addToSurvivalCounter(){
@@ -85,7 +86,7 @@ public class Animal implements IMapElement {
     //jezeli nie maja energii zwroc null w przeciwnym przypadku usun energie rodzica i zrob dziecko, zwroc dziecko
     public Animal procreate(Animal parent1, Animal parent2) {
         if (parent1.getEnergy() >= CONSTANT.COSTTOCONCIEVECHILDREN && parent2.getEnergy() >= CONSTANT.COSTTOCONCIEVECHILDREN) {
-            int geneShare = parent1.getEnergy() / (parent1.getEnergy() + parent2.getEnergy()) * 100;
+            int geneShare = (int)((float)parent1.getEnergy() / ((float)parent1.getEnergy() + (float)parent2.getEnergy()) * 100);
             Animal child = new Animal(map, parent1.getPosition(), parent1.getOrientation(), CONSTANT.COSTTOCONCIEVECHILDREN * 2, parent1.getGenome(), parent2.getGenome(), geneShare);
             child.getGenome().mutate();
             return child;
