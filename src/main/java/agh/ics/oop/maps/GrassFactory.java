@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 public class GrassFactory {
-    int wariant=0;
+    int wariant=1;
     IWorldMap map;
     LinkedList<Vector2d> fertileFields=new LinkedList<>();
     LinkedList<Vector2d> remainingFields=new LinkedList<>();
@@ -67,6 +67,9 @@ public class GrassFactory {
             int numberOfTakingFields=((map.getEndOfMap().x()+1)*(map.getEndOfMap().y()+1)*2)/10;
             for(int i=0;i<=map.getEndOfMap().x();i++){
                 for(int j=0;j<=map.getEndOfMap().y();j++){
+                    if(map.grassStatus(new Vector2d(i,j))){
+                        continue;
+                    }
                     allFields.add(new Vector2d(i,j));
                 }
             }

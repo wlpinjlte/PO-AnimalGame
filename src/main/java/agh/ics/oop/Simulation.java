@@ -15,7 +15,7 @@ public class Simulation implements Runnable{
 
     private final int moveDelay=1000;
     private final int numberOfStepsSimulation=100;
-    private final int numberOfAnimalToAdd=10;
+    private final int numberOfAnimalToAdd=25;
 
     public Simulation(IWorldMap map) throws IllegalAccessException {
         this.map = map;
@@ -29,12 +29,10 @@ public class Simulation implements Runnable{
     @Override
     public void run() {
         for(int i=0;i<numberOfAnimalToAdd;i++){
-            Animal animal=new Animal(map,new Vector2d((int)(Math.random()*map.getEndOfMap().x()),(int)(Math.random()*map.getEndOfMap().y())), MapDirection.NORTH,CONSTANT.PLUSENERGY);
+            Animal animal=new Animal(map,new Vector2d((int)(Math.random()*map.getEndOfMap().x()),(int)(Math.random()*map.getEndOfMap().y())), MapDirection.NORTH,CONSTANT.PLUSENERGY*5);
             System.out.println(animal.getPosition());
             map.placeAnimal(animal);
         }
-        Animal animal=new Animal(map,new Vector2d((int)(Math.random()*map.getEndOfMap().x()),(int)(Math.random()*map.getEndOfMap().y())), MapDirection.NORTH,0);
-        map.placeAnimal(animal);
         for(int i=0;i<numberOfStepsSimulation;i++){
             try {
                 Thread.sleep(moveDelay);

@@ -1,5 +1,6 @@
 package agh.ics.oop.maps;
 
+import agh.ics.oop.CONSTANT;
 import agh.ics.oop.auxiliary.Vector2d;
 import agh.ics.oop.mapElements.Animal;
 
@@ -15,7 +16,7 @@ public class HellPortal extends AbstractWorldMap {
         }else{
             int positionX=(int)(Math.random()*endOfMap.x());
             int positionY=(int)(Math.random()*endOfMap.y());
-            //odejmowanie energi zwierzęcia
+            element.changeEnergy(-CONSTANT.COSTTOCONCIEVECHILDREN);
             super.positionChange(element,oldPosition,new Vector2d(positionX,positionY));
         }
     }

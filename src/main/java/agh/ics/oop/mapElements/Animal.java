@@ -43,6 +43,7 @@ public class Animal implements IMapElement {
             orientation = orientation.next(orientation);
         }
         addToSurvivalCounter();
+        changeEnergy(-CONSTANT.PLUSENERGY/2);
         positionChanged(position, position.add(orientation.toUnitVector()));
     }
     public void addToSurvivalCounter(){
@@ -89,6 +90,8 @@ public class Animal implements IMapElement {
             int geneShare = (int)((float)parent1.getEnergy() / ((float)parent1.getEnergy() + (float)parent2.getEnergy()) * 100);
             Animal child = new Animal(map, parent1.getPosition(), parent1.getOrientation(), CONSTANT.COSTTOCONCIEVECHILDREN * 2, parent1.getGenome(), parent2.getGenome(), geneShare);
             child.getGenome().mutate();
+            parent1.changeEnergy(-CONSTANT.COSTTOCONCIEVECHILDREN);
+            parent2.changeEnergy(-CONSTANT.COSTTOCONCIEVECHILDREN);
             return child;
         } else {
             return null;

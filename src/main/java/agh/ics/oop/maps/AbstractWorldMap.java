@@ -48,10 +48,12 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
         for(int i=0;i< endOfMap.x();i++){
             for(int j=0;j< endOfMap.y();j++){
                 Vector2d fieldToUpdate=new Vector2d(i,j);
-                for(Animal animal:animalMap.get(fieldToUpdate)){
-                    if(animal.getEnergy()==0) {
+                LinkedList<Animal>copyMapValue=(LinkedList<Animal>) animalMap.get(fieldToUpdate).clone();
+                for(Animal animal:copyMapValue){
+                    if(animal.getEnergy()<=0) {
                         animalMap.get(fieldToUpdate).remove(animal);
                         fieldStats[i][j].increasedDeathAnimals();
+                        animal.removeObserver(this);
                     }
                 }
             }
