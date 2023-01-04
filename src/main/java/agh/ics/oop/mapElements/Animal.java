@@ -84,6 +84,16 @@ public class Animal implements IMapElement {
         this.position = position;
     }
 
+
+    public String getImageResource() {
+        if(energy<50){
+            return "src/main/resources/animal3.png";
+        }else if(energy<100){
+            return "src/main/resources/animal2.png";
+        }
+        return "src/main/resources/animal1.png";
+    }
+
     //jezeli nie maja energii zwroc null w przeciwnym przypadku usun energie rodzica i zrob dziecko, zwroc dziecko
     public Animal procreate(Animal parent1, Animal parent2) {
         if (parent1.getEnergy() >= CONSTANT.COSTTOCONCIEVECHILDREN && parent2.getEnergy() >= CONSTANT.COSTTOCONCIEVECHILDREN) {

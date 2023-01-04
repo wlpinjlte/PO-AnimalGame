@@ -17,4 +17,8 @@ public class Grass implements IMapElement{
     public void setPosition(Vector2d newPosition) {
         this.position=newPosition;
     }
+
+    public static String getImageResource() {
+        return "src/main/resources/grass.png";
+    }
 }

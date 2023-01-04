@@ -73,6 +73,9 @@ public class GrassFactory {
                     allFields.add(new Vector2d(i,j));
                 }
             }
+            if(allFields.size()==0){
+                return;
+            }
             allFields.sort(new Comparator<Vector2d>(){
                 @Override
                 public int compare(Vector2d cordinates1, Vector2d cordinates2) {
@@ -89,6 +92,7 @@ public class GrassFactory {
                     return 0;
                 }
             });
+            numberOfTakingFields=Math.min(numberOfTakingFields, allFields.size());
             fertileFields= new LinkedList<>(allFields.subList(0, numberOfTakingFields));
             remainingFields=new LinkedList<>(allFields.subList(numberOfTakingFields, allFields.size()));
         }
