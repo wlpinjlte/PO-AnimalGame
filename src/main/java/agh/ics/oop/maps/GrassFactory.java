@@ -17,7 +17,7 @@ public class GrassFactory {
     public void generateGrass(){
         setFieldsStatus();
         int numberOfFields=(map.getEndOfMap().x()+1)*(map.getEndOfMap().y()+1);
-        int NumberOfFiledToGrass=numberOfFields*2/10;
+        int NumberOfFiledToGrass=numberOfFields/5;
         System.out.println(NumberOfFiledToGrass);
         Vector2d fieldToGrowGrass;
         int i=0;
@@ -46,10 +46,10 @@ public class GrassFactory {
 
     private void setFieldsStatus(){
         if(wariant==0){
-            int middleOfTheMap=map.getEndOfMap().y()/2;
-            int range=map.getEndOfMap().y()/10;
-            int start=middleOfTheMap-range;
-            int end=middleOfTheMap+range;
+            int middleOfTheMap=(map.getEndOfMap().y()+1)/2;
+            int range=(map.getEndOfMap().y()+1)/10;
+            int start=middleOfTheMap-range-1;
+            int end=middleOfTheMap+range-1;
             for(int i=0;i<=map.getEndOfMap().x();i++){
                 for(int j=0;j<=map.getEndOfMap().y();j++){
                     if(map.grassStatus(new Vector2d(i,j))){

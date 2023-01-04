@@ -1,12 +1,14 @@
 package agh.ics.oop;
 
+import agh.ics.oop.gui.App;
 import agh.ics.oop.maps.GlobeMap;
 import agh.ics.oop.maps.IWorldMap;
+import javafx.application.Application;
+
+import static javafx.application.Application.launch;
 
 public class Main {
-    public static void main(String[] args) throws IllegalAccessException, InterruptedException {
-        GlobeMap map=new GlobeMap(5,5);
-        Simulation simulation=new Simulation(map);
-        simulation.run();
+    public static void main(String[] args){
+        Application.launch(App.class, args);
     }
 }

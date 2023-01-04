@@ -9,11 +9,11 @@ import agh.ics.oop.maps.IWorldMap;
 
 import java.util.ArrayList;
 
-public class Simulation {
+public class Simulation implements Runnable{
     private final IWorldMap map;
     private final ArrayList<IMapRefreshObserver> mapRefreshObservers = new ArrayList<>();
 
-    private final int moveDelay=100;
+    private final int moveDelay=1000;
     private final int numberOfStepsSimulation=100;
     private final int numberOfAnimalToAdd=10;
 
@@ -26,7 +26,8 @@ public class Simulation {
             observer.refresh();
         }
     }
-    public void run() throws InterruptedException {
+    @Override
+    public void run() {
         for(int i=0;i<numberOfAnimalToAdd;i++){
             Animal animal=new Animal(map,new Vector2d((int)(Math.random()*map.getEndOfMap().x()),(int)(Math.random()*map.getEndOfMap().y())), MapDirection.NORTH,CONSTANT.PLUSENERGY);
             System.out.println(animal.getPosition());
@@ -35,7 +36,11 @@ public class Simulation {
         Animal animal=new Animal(map,new Vector2d((int)(Math.random()*map.getEndOfMap().x()),(int)(Math.random()*map.getEndOfMap().y())), MapDirection.NORTH,0);
         map.placeAnimal(animal);
         for(int i=0;i<numberOfStepsSimulation;i++){
-            Thread.sleep(moveDelay);
+            try {
+                Thread.sleep(moveDelay);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             map.removeDeadAnimals();
             map.moveAnimals();
             map.upadteMap();

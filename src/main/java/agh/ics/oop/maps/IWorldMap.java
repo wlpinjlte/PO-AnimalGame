@@ -21,4 +21,5 @@ public interface IWorldMap {
     void moveAnimals();
     void wys();
     boolean grassStatus(Vector2d positionToCheck);
+    LinkedList<Animal> animalsAt(Vector2d positionToCheck);
 }

@@ -123,6 +123,9 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
     public FieldStats getFieldStatsPosition(Vector2d position){
         return fieldStats[position.x()][position.y()];
     }
+    public LinkedList<Animal> animalsAt(Vector2d positionToCheck){
+        return animalMap.get(positionToCheck);
+    }
 
     public void moveAnimals(){
         LinkedList<LinkedList<Animal>> copyMapValue=new LinkedList<>();
@@ -137,6 +140,7 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
             }
         }
     }
+    //temp
     public void wys(){
         for(int i=0;i<=getEndOfMap().x();i++){
             for(int j=0;j<=getEndOfMap().y();j++){
