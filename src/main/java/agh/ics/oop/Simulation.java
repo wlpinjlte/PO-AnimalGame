@@ -11,14 +11,19 @@ import java.util.ArrayList;
 
 public class Simulation implements Runnable{
     private final IWorldMap map;
+    private final CONSTANT CONSTANT;
     private final ArrayList<IMapRefreshObserver> mapRefreshObservers = new ArrayList<>();
 
-    private final int moveDelay=1000;
-    private final int numberOfStepsSimulation=100;
-    private final int numberOfAnimalToAdd=25;
+    private final int moveDelay;
+    private final int numberOfStepsSimulation;
+    private final int numberOfAnimalToAdd;
 
-    public Simulation(IWorldMap map) throws IllegalAccessException {
+    public Simulation(IWorldMap map,CONSTANT constant) throws IllegalAccessException {
         this.map = map;
+        this.CONSTANT=constant;
+        this.moveDelay=CONSTANT.MOVEDELAY;
+        this.numberOfStepsSimulation=CONSTANT.SIMULATIONLENGTH;
+        this.numberOfAnimalToAdd=CONSTANT.AMOUNTOFANIMALS;
     }
 
     public void mapRefresh() {
@@ -29,7 +34,7 @@ public class Simulation implements Runnable{
     @Override
     public void run() {
         for(int i=0;i<numberOfAnimalToAdd;i++){
-            Animal animal=new Animal(map,new Vector2d((int)(Math.random()*map.getEndOfMap().x()),(int)(Math.random()*map.getEndOfMap().y())), MapDirection.NORTH,CONSTANT.PLUSENERGY*5);
+            Animal animal=new Animal(map,new Vector2d((int)(Math.random()*map.getEndOfMap().x()),(int)(Math.random()*map.getEndOfMap().y())), MapDirection.NORTH,CONSTANT.PLUSENERGY*5,CONSTANT);
             System.out.println(animal.getPosition());
             map.placeAnimal(animal);
         }
@@ -42,6 +47,10 @@ public class Simulation implements Runnable{
             map.removeDeadAnimals();
             map.moveAnimals();
             map.upadteMap();
+            map.countFreeSpaces();
+            map.setMeanNumberOfChildren();
+            map.removeDeadAnimals();
+            map.setAverageEnergy();
             mapRefresh();
         }
     }

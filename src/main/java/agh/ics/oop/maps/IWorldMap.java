@@ -22,4 +22,7 @@ public interface IWorldMap {
     void wys();
     boolean grassStatus(Vector2d positionToCheck);
     LinkedList<Animal> animalsAt(Vector2d positionToCheck);
+    void countFreeSpaces();
+    void setMeanNumberOfChildren();
+    void setAverageEnergy();
 }

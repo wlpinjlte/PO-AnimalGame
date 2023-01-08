@@ -1,18 +1,26 @@
 package agh.ics.oop.maps;
 
+import agh.ics.oop.CONSTANT;
+import agh.ics.oop.auxiliary.GrassFieldVariants;
 import agh.ics.oop.auxiliary.Vector2d;
+import agh.ics.oop.mapElements.MapStats;
 
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 public class GrassFactory {
-    int wariant=1;
+    private final CONSTANT CONSTANT;
+    private MapStats mapStats;
+    private final GrassFieldVariants grassFieldVariant;
     IWorldMap map;
     LinkedList<Vector2d> fertileFields=new LinkedList<>();
     LinkedList<Vector2d> remainingFields=new LinkedList<>();
-    public GrassFactory(IWorldMap map){
+    public GrassFactory(IWorldMap map, CONSTANT constant,MapStats mapStats){
         this.map=map;
+        this.CONSTANT=constant;
+        this.mapStats=mapStats;
+        this.grassFieldVariant = CONSTANT.grassFieldVariant;
     }
     public void generateGrass(){
         setFieldsStatus();
@@ -45,7 +53,7 @@ public class GrassFactory {
     }
 
     private void setFieldsStatus(){
-        if(wariant==0){
+        if(grassFieldVariant==GrassFieldVariants.EquatorBiased){
             int middleOfTheMap=(map.getEndOfMap().y()+1)/2;
             int range=(map.getEndOfMap().y()+1)/10;
             int start=middleOfTheMap-range-1;
@@ -62,7 +70,7 @@ public class GrassFactory {
                     }
                 }
             }
-        }else if(wariant==1){
+        }else if(grassFieldVariant==GrassFieldVariants.DeathBiased){
             ArrayList<Vector2d> allFields = new ArrayList<>();
             int numberOfTakingFields=((map.getEndOfMap().x()+1)*(map.getEndOfMap().y()+1)*2)/10;
             for(int i=0;i<=map.getEndOfMap().x();i++){

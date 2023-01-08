@@ -3,10 +3,11 @@ package agh.ics.oop.maps;
 import agh.ics.oop.CONSTANT;
 import agh.ics.oop.auxiliary.Vector2d;
 import agh.ics.oop.mapElements.Animal;
+import agh.ics.oop.mapElements.MapStats;
 
 public class HellPortal extends AbstractWorldMap {
-    public HellPortal(int height,int width){
-        super(height,width);
+    public HellPortal(int height, int width, CONSTANT constant, MapStats mapStats){
+        super(height,width,constant,mapStats);
     }
 
     @Override
