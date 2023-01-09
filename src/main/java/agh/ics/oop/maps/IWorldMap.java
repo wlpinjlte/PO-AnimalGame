@@ -3,8 +3,7 @@ package agh.ics.oop.maps;
 import agh.ics.oop.auxiliary.Vector2d;
 import agh.ics.oop.mapElements.Animal;
 import agh.ics.oop.mapElements.FieldStats;
-import agh.ics.oop.mapElements.Grass;
-import agh.ics.oop.mapElements.IMapElement;
+
 
 import java.util.LinkedList;
 
@@ -25,4 +24,5 @@ public interface IWorldMap {
     void countFreeSpaces();
     void setMeanNumberOfChildren();
     void setAverageEnergy();
+    void increaseSimulationDay();
 }

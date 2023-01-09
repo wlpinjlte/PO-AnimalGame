@@ -3,7 +3,7 @@ package agh.ics.oop.mapElements;
 import agh.ics.oop.CONSTANT;
 
 public class MapStats {
-    private CONSTANT CONSTANT;
+    private final CONSTANT CONSTANT;
     private int amountOfAnimals;
     private int amountOfGrass;
     private int amountOfDeadAnimals;
@@ -72,15 +72,15 @@ public class MapStats {
     }
 
     public double getAverageLifespan() {
-        return averageLifespan;
+        return Math.round(averageLifespan*100.0)/100.0;
     }
 
     public double getAverageNumberOfChildren() {
-        return averageNumberOfChildren;
+        return Math.round(averageNumberOfChildren*100.0)/100.0;
     }
 
     public double getAverageEnergy() {
-        return averageEnergy;
+        return Math.round(averageEnergy*100.0)/100.0;
     }
 
     public int getAmountOfDeadAnimals() {

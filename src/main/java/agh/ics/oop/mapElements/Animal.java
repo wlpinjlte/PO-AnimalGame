@@ -10,6 +10,7 @@ import java.util.LinkedList;
 
 public class Animal implements IMapElement {
     private final CONSTANT CONSTANT;
+    private boolean isDead=false;
     private int numberOfChildren=0;
     private int amountOfGrassEaten=0;
     private final GenomeVariants genomeVariant;
@@ -18,34 +19,39 @@ public class Animal implements IMapElement {
     private IWorldMap map;
     private final Genes genome;
     private int energy;
+    private int dayOfBirth;
 
     private int daysAlive = 0;
     protected final LinkedList<IPositionChangeObserver> positionObservers = new LinkedList<>();
 
 
-    public Animal(IWorldMap map, Vector2d initialPosition, MapDirection initialOrientation, int startingEnergy, CONSTANT constant) {
-        setParameters(map, initialPosition, initialOrientation, startingEnergy);
+    public Animal(IWorldMap map, Vector2d initialPosition, MapDirection initialOrientation, int startingEnergy, CONSTANT constant,int dOB) {
+        setParameters(map, initialPosition, initialOrientation, startingEnergy,dOB);
         this.CONSTANT=constant;
         this.genomeVariant= CONSTANT.genomeVariant;
         this.genome = new Genes(constant);
     }
 
-    public Animal(IWorldMap map, Vector2d initialPosition, MapDirection initialOrientation, int startingEnergy, CONSTANT constant, Genes Genome1, Genes Genome2, int geneShare) {
-        setParameters(map, initialPosition, initialOrientation, startingEnergy);
+    public Animal(IWorldMap map, Vector2d initialPosition, MapDirection initialOrientation, int startingEnergy, CONSTANT constant, Genes Genome1, Genes Genome2, int geneShare, int dOB) {
+        setParameters(map, initialPosition, initialOrientation, startingEnergy, dOB);
         this.CONSTANT=constant;
         this.genomeVariant= CONSTANT.genomeVariant;
         this.genome = new Genes(Genome1, Genome2, geneShare,constant);
     }
 
-    private void setParameters(IWorldMap map, Vector2d pos, MapDirection ori, int energy) {
+    private void setParameters(IWorldMap map, Vector2d pos, MapDirection ori, int energy, int dayOfBirth) {
         this.map = map;
         this.position = pos;
         this.orientation = ori;
         this.energy = energy;
+        this.dayOfBirth=dayOfBirth;
     }
 
     //wysyła zapytanie o zmiane pozycji do mapy
 //genom nie działa
+    public boolean ifDied(){
+        return isDead;
+    }
     public void move() {
         int timesToTurn=0;
         if(genomeVariant==GenomeVariants.GodsPlan){
@@ -77,6 +83,9 @@ public class Animal implements IMapElement {
         }
         energy += energyChange;
     }
+    public void kill(){
+        isDead=true;
+    }
 
     public Genes getGenome() {
         return genome;
@@ -88,10 +97,6 @@ public class Animal implements IMapElement {
 
     public int getEnergy() {
         return energy;
-    }
-
-    public void increaseNumberOfChildren(){
-        numberOfChildren+=1;
     }
     public MapDirection getDirection() {
         return orientation;
@@ -122,10 +127,10 @@ public class Animal implements IMapElement {
     }
 
     //jezeli nie maja energii zwroc null w przeciwnym przypadku usun energie rodzica i zrob dziecko, zwroc dziecko
-    public Animal procreate(Animal parent1, Animal parent2) {
+    public Animal procreate(Animal parent1, Animal parent2,int dayOfBirth) {
         if (parent1.getEnergy() >= CONSTANT.COSTTOCONCIEVECHILDREN && parent2.getEnergy() >= CONSTANT.COSTTOCONCIEVECHILDREN) {
             int geneShare = (int)((float)parent1.getEnergy() / ((float)parent1.getEnergy() + (float)parent2.getEnergy()) * 100);
-            Animal child = new Animal(map, parent1.getPosition(), parent1.getOrientation(), CONSTANT.COSTTOCONCIEVECHILDREN * 2, CONSTANT, parent1.getGenome(), parent2.getGenome(), geneShare);
+            Animal child = new Animal(map, parent1.getPosition(), parent1.getOrientation(), CONSTANT.COSTTOCONCIEVECHILDREN * 2, CONSTANT, parent1.getGenome(), parent2.getGenome(), geneShare,dayOfBirth);
             child.getGenome().mutate();
             parent1.changeEnergy(-CONSTANT.COSTTOCONCIEVECHILDREN);
             parent2.changeEnergy(-CONSTANT.COSTTOCONCIEVECHILDREN);
@@ -149,7 +154,6 @@ public class Animal implements IMapElement {
             observer.positionChange(this,oldPosition, newPosition);
         }
     }
-
     public int getAmountOfGrassEaten() {
         return amountOfGrassEaten;
     }
@@ -160,5 +164,8 @@ public class Animal implements IMapElement {
 
     public int getDaysAlive() {
         return daysAlive;
+    }
+    public int getDateOfDeath(){
+        return dayOfBirth+daysAlive;
     }
 }

@@ -4,7 +4,6 @@ import agh.ics.oop.auxiliary.MapDirection;
 import agh.ics.oop.auxiliary.Vector2d;
 import agh.ics.oop.gui.IMapRefreshObserver;
 import agh.ics.oop.mapElements.Animal;
-import agh.ics.oop.maps.AbstractWorldMap;
 import agh.ics.oop.maps.IWorldMap;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ public class Simulation implements Runnable{
     private final IWorldMap map;
     private final CONSTANT CONSTANT;
     private final ArrayList<IMapRefreshObserver> mapRefreshObservers = new ArrayList<>();
-
+    private boolean continuation=false;
     private final int moveDelay;
     private final int numberOfStepsSimulation;
     private final int numberOfAnimalToAdd;
@@ -31,10 +30,14 @@ public class Simulation implements Runnable{
             observer.refresh();
         }
     }
+    public void setContinuationTrue(){
+        continuation=true;
+    }
     @Override
     public void run() {
         for(int i=0;i<numberOfAnimalToAdd;i++){
-            Animal animal=new Animal(map,new Vector2d((int)(Math.random()*map.getEndOfMap().x()),(int)(Math.random()*map.getEndOfMap().y())), MapDirection.NORTH,CONSTANT.PLUSENERGY*5,CONSTANT);
+            if (continuation){ break; }
+            Animal animal=new Animal(map,new Vector2d((int)(Math.random()*map.getEndOfMap().x()),(int)(Math.random()*map.getEndOfMap().y())), MapDirection.NORTH,CONSTANT.PLUSENERGY*5,CONSTANT,0);
             System.out.println(animal.getPosition());
             map.placeAnimal(animal);
         }
@@ -44,6 +47,7 @@ public class Simulation implements Runnable{
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+            map.increaseSimulationDay();
             map.removeDeadAnimals();
             map.moveAnimals();
             map.upadteMap();

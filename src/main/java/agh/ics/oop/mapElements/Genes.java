@@ -26,7 +26,19 @@ public class Genes {
              genome.add((int)(Math.random()*8));
         }
     }
-    public Genes(Genes p1, Genes p2, int gS,CONSTANT constant){
+    public int getGenomeLength(){
+        return genomeLength;
+    }
+    @Override
+    public String toString() {
+        String genes ="| ";
+        for (int i=0;i<CONSTANT.GENOMELENGTH;i++){
+            genes += Integer.toString(genome.get(i)) + " | ";
+        }
+        return genes;
+    }
+
+    public Genes(Genes p1, Genes p2, int gS, CONSTANT constant){
         this.CONSTANT=constant;
         this.mutationVariant= constant.mutationVariant;
         this.genomeLength = constant.GENOMELENGTH;

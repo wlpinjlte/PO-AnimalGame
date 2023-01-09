@@ -6,10 +6,10 @@ import agh.ics.oop.auxiliary.Vector2d;
 import agh.ics.oop.mapElements.*;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
     protected MapStats mapStats;
+    protected int simulationDay=0;
     protected final CONSTANT CONSTANT;
     protected final HashMap<Vector2d,LinkedList<Animal>> animalMap =new HashMap<>();
     protected final boolean[][]grassMap;
@@ -32,6 +32,9 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
                 fieldStats[i][j]=new FieldStats(new Vector2d(i,j));
             }
         }
+    }
+    public void increaseSimulationDay(){
+        simulationDay+=1;
     }
     //dodalem setter pozycji zwierzecia
     @Override
@@ -58,6 +61,7 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
                     if(animal.getEnergy()<=0) {
                         mapStats.updateAverageLifespan(animal);
                         mapStats.increaseDeadAnimalCount();
+                        animal.kill();
                         mapStats.decreaseAnimalCount();
                         animalMap.get(fieldToUpdate).remove(animal);
                         fieldStats[i][j].increasedDeathAnimals();
@@ -103,7 +107,7 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
     @Override
     public void eatingGrass(Vector2d positionToUpdate) {
         if(animalMap.get(positionToUpdate).size()>0&& grassMap[positionToUpdate.x()][positionToUpdate.y()]){
-            Animal maxAnimal=new Animal(this,new Vector2d(0,0), MapDirection.NORTH,0,CONSTANT);
+            Animal maxAnimal=new Animal(this,new Vector2d(0,0), MapDirection.NORTH,0,CONSTANT,simulationDay);
             for(Animal animal:animalMap.get(positionToUpdate)){
                 if(maxAnimal.getEnergy()<animal.getEnergy()){
                     maxAnimal=animal;
@@ -118,8 +122,8 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
     @Override
     public void multiplication(Vector2d positionToUpdate) {
         if(animalMap.get(positionToUpdate).size()>1){
-            Animal maxAnimal1=new Animal(this,new Vector2d(0,0), MapDirection.NORTH,0,CONSTANT);
-            Animal maxAnimal2=new Animal(this,new Vector2d(0,0), MapDirection.NORTH,0,CONSTANT);
+            Animal maxAnimal1=new Animal(this,new Vector2d(0,0), MapDirection.NORTH,0,CONSTANT,simulationDay);
+            Animal maxAnimal2=new Animal(this,new Vector2d(0,0), MapDirection.NORTH,0,CONSTANT,simulationDay);
             for(Animal animal:animalMap.get(positionToUpdate)){
                 if(maxAnimal1.getEnergy()<animal.getEnergy()){
                     maxAnimal1=animal;
@@ -130,10 +134,9 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
                     maxAnimal2=animal;
                 }
             }
-            Animal animalChild=maxAnimal1.procreate(maxAnimal1,maxAnimal2);
+            Animal animalChild=maxAnimal1.procreate(maxAnimal1,maxAnimal2,simulationDay);
             if(animalChild!=null) {
                 placeAnimal(animalChild);
-                animalChild.increaseNumberOfChildren();
             }
         }
     }

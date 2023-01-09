@@ -4,33 +4,28 @@ import agh.ics.oop.CONSTANT;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.auxiliary.*;
 import agh.ics.oop.mapElements.Animal;
-import agh.ics.oop.mapElements.FieldStats;
 import agh.ics.oop.mapElements.MapStats;
 import agh.ics.oop.maps.GlobeMap;
 import agh.ics.oop.maps.HellPortal;
 import agh.ics.oop.maps.IWorldMap;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.geometry.HPos;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
 import java.io.FileNotFoundException;
-import java.util.List;
+
 
 public class App extends Application implements IMapRefreshObserver{
     private MapStats mapStats;
@@ -55,7 +50,7 @@ public class App extends Application implements IMapRefreshObserver{
     public int localAmountOfAnimals=10;
     private Thread simulationThread;
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         Text buttonTittle1 = new Text("Choose the map variant");
         Button button1 = new Button("GlobeMap");
         button1.setStyle("-fx-background-color:green;");
@@ -167,7 +162,7 @@ public class App extends Application implements IMapRefreshObserver{
             localAmountOfAnimals=Integer.parseInt(amAnimTF.getText());
             localSimulationLength=Integer.parseInt(simLenTF.getText());
             localMoveDelay=Integer.parseInt(moveDelTF.getText());
-            initializeCONSTANTandStart(event);
+            initializeCONSTANTandStart();
         });
 
         configScreen.add(button,3,14);
@@ -178,7 +173,7 @@ public class App extends Application implements IMapRefreshObserver{
 
     }
 
-    private void initializeCONSTANTandStart(ActionEvent click){
+    private void initializeCONSTANTandStart(){
 
         CONSTANT constant = new CONSTANT(localPlusEnergy,localCostToConcieveChildren,localGenomeLength,localMoveDelay,localSimulationLength,localAmountOfAnimals,localMapVariant,localGenomeVariant,localMutationVariant,localGrassFieldVariant);
         mapStats = new MapStats(constant,15*15);
@@ -263,21 +258,63 @@ public class App extends Application implements IMapRefreshObserver{
         Text text71=new Text(Double.toString(mapStats.getAverageNumberOfChildren()));
         gridPane.add(text7,0,22);
         gridPane.add(text71,4,22);
+        if(chosenAnimal!=null) {
+            Text text8 = new Text("genome: ");
+            Text text81 = new Text(chosenAnimal.getGenome().toString());
+            gridPane.add(text8, 6, 16);
+            gridPane.add(text81, 8, 16);
+            Text text9 = new Text("active gene:");
+            Text text91 = new Text(Integer.toString(chosenAnimal.getGenome().getGene(chosenAnimal.getDaysAlive() % chosenAnimal.getGenome().getGenomeLength())));
+            gridPane.add(text9, 6, 17);
+            gridPane.add(text91, 8, 17);
+            Text text10 = new Text("energy: ");
+            Text text101 = new Text(Integer.toString(chosenAnimal.getEnergy()));
+            gridPane.add(text10, 6, 18);
+            gridPane.add(text101, 8, 18);
+            Text text111 = new Text("grass eaten: ");
+            Text text1111 = new Text(Integer.toString(chosenAnimal.getAmountOfGrassEaten()));
+            gridPane.add(text111, 6, 19);
+            gridPane.add(text1111, 8, 19);
+            Text text12 = new Text("children: ");
+            Text text121 = new Text(Integer.toString(chosenAnimal.getNumberOfChildren()));
+            gridPane.add(text12, 6, 20);
+            gridPane.add(text121, 8, 20);
+            if (!chosenAnimal.ifDied()) {
+                Text text13 = new Text("days alive: ");
+                Text text131 = new Text(Integer.toString(chosenAnimal.getDaysAlive()));
+                gridPane.add(text13, 6, 21);
+                gridPane.add(text131, 8, 21);
+            } else {
+                Text text14 = new Text("date of death: ");
+                Text text141 = new Text(Integer.toString(chosenAnimal.getDateOfDeath()));
+                gridPane.add(text14, 6, 21);
+                gridPane.add(text141, 8, 21);
+            }
+        }
 
 
         Button stop = new Button("stop");
         Button start = new Button("start");
-        gridPane.add(stop,8,23);
+        if(!isStopped){
+            gridPane.add(stop,12,23);
+        }
+        else{
+            gridPane.add(start,12,23);
+        }
+
         stop.setOnAction(event->{
             simulationThread.interrupt();
+            isStopped=true;
             gridPane.getChildren().remove(stop);
-            gridPane.add(start,8,23);
+            gridPane.add(start,12,23);
         });
         start.setOnAction(event->{
+            this.simulation.setContinuationTrue();
             simulationThread=new Thread(this.simulation);
+            isStopped=false;
             simulationThread.start();
             gridPane.getChildren().remove(start);
-            gridPane.add(stop,8,23);
+            gridPane.add(stop,12,23);
         });
     }
     @Override
