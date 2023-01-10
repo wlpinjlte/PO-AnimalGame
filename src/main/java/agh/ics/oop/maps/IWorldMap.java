@@ -18,7 +18,6 @@ public interface IWorldMap {
     FieldStats getFieldStatsPosition(Vector2d position);
     void updateGrassField(Vector2d grassToPlace);
     void moveAnimals();
-    void wys();
     boolean grassStatus(Vector2d positionToCheck);
     LinkedList<Animal> animalsAt(Vector2d positionToCheck);
     void countFreeSpaces();

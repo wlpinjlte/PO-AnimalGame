@@ -23,7 +23,7 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
         grassMap=new boolean[width][height];
         fieldStats= new FieldStats[width][height];
         endOfMap=new Vector2d(width-1,height-1);
-        grassFactory=new GrassFactory(this,CONSTANT,mapStats);
+        grassFactory=new GrassFactory(this,CONSTANT);
         for(int i=0;i<width;i++){
             for(int j=0;j<height;j++){
                 LinkedList<Animal> listAnimalToPut=new LinkedList<>();
@@ -166,7 +166,6 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
             }
         }
         growingGrass();
-        wys();
     }
     public void updateGrassField(Vector2d grassToPlace){
         if(!grassMap[grassToPlace.x()][grassToPlace.y()]){
@@ -199,22 +198,5 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
                 }
             }
         }
-    }
-    //temp
-    public void wys(){
-        for(int i=0;i<=getEndOfMap().x();i++){
-            for(int j=0;j<=getEndOfMap().y();j++){
-                System.out.println(i+" "+j);
-                System.out.println();
-                System.out.println("grass"+grassMap[i][j]);
-                for(Animal animal:animalMap.get(new Vector2d(i,j))){
-                    System.out.println(animal);
-                    System.out.println(animal.getEnergy());
-                }
-            }
-        }
-        System.out.println();
-        System.out.println("koniec");
-        System.out.println();
     }
 }

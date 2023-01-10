@@ -53,6 +53,7 @@ public class App extends Application implements IMapRefreshObserver{
     private int localStartingEnergy=50;
     private int localMapSize=15;
     private int localMaximumMutations=16;
+    private int localGrassGrowPerDay=20;
     private Thread simulationThread;
     @Override
     public void start(Stage primaryStage) {
@@ -144,7 +145,7 @@ public class App extends Application implements IMapRefreshObserver{
         Text text9 = new Text("Starting energy");
         Text text10 = new Text("Map size");
         Text text11 = new Text("Maximal amount of mutation");
-
+        Text text12= new Text("Number of grass to grow per day");
         TextField pEnergyTF = new TextField("10");
         configScreen.add(pEnergyTF,1,8,1,1);
         configScreen.add(text1,0,8,1,1);
@@ -178,7 +179,9 @@ public class App extends Application implements IMapRefreshObserver{
         TextField maxmut = new TextField("16");
         configScreen.add(maxmut,1,19,1,1);
         configScreen.add(text11,0,19,1,1);
-
+        TextField growGrassPerDay= new TextField("20");
+        configScreen.add(growGrassPerDay,1,20,1,1);
+        configScreen.add(text12,0,20,1,1);
         Button button = new Button("Start the simulation");
         button.setOnAction(event -> {
             localPlusEnergy=Integer.parseInt(pEnergyTF.getText());
@@ -192,10 +195,11 @@ public class App extends Application implements IMapRefreshObserver{
             localStartingEnergy=Integer.parseInt(stEn.getText());
             localMapSize=Integer.parseInt(mapSize.getText());
             localMaximumMutations=Integer.parseInt(maxmut.getText());
+            localGrassGrowPerDay=Integer.parseInt(growGrassPerDay.getText());
             initializeCONSTANTandStart();
         });
 
-        configScreen.add(button,3,20);
+        configScreen.add(button,1,21);
         Scene scene1 = new Scene(configScreen,640,960);
         primaryStage.setScene(scene1);
         primaryStage.show();
@@ -208,7 +212,7 @@ public class App extends Application implements IMapRefreshObserver{
         CONSTANT constant = new CONSTANT(localPlusEnergy,localCostToConcieveChildren
                 ,localGenomeLength,localMoveDelay,localSimulationLength,localAmountOfAnimals,localMapVariant
                 ,localGenomeVariant,localMutationVariant,localGrassFieldVariant,localCostToMove,localMinimalEnergyToProcreate,
-                localStartingEnergy,localMapSize, localMaximumMutations);
+                localStartingEnergy,localMapSize, localMaximumMutations,localGrassGrowPerDay);
         mapStats = new MapStats(constant,localMapSize*localMapSize);
         if(constant.mapVariant==MapVariants.GlobeMap){
             map=new GlobeMap(localMapSize,localMapSize,constant,mapStats);

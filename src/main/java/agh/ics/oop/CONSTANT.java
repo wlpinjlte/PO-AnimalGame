@@ -23,8 +23,9 @@ public class CONSTANT {
     public final int STARTINGENERGY;
     public final int MAPSIZE;
     public final int MAXMUTATIONS;
+    public final int NUMBEROFGRASSTOGROW;
     public CONSTANT(int plusEnergy, int costToConcievieChildren, int genomeLength, int moveDelay, int simulationLength, int amountOfAnimals, MapVariants mv,
-                    GenomeVariants gv, MutationVariants mutv, GrassFieldVariants gfv,int ctm,int metp, int se,int ms, int mm){
+                    GenomeVariants gv, MutationVariants mutv, GrassFieldVariants gfv,int ctm,int metp, int se,int ms, int mm,int numberOfGrassToGrow){
         PLUSENERGY = plusEnergy;
         COSTTOCONCIEVECHILDREN=costToConcievieChildren;
         GENOMELENGTH=genomeLength;
@@ -40,7 +41,7 @@ public class CONSTANT {
         STARTINGENERGY=se;
         MAPSIZE=ms;
         MAXMUTATIONS=mm;
-
+        NUMBEROFGRASSTOGROW=numberOfGrassToGrow;
     }
 
 

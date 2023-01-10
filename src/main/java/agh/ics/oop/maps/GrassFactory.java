@@ -11,24 +11,24 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 public class GrassFactory {
     private final CONSTANT CONSTANT;
-    private MapStats mapStats;
     private final GrassFieldVariants grassFieldVariant;
+    private final int NumberOfFiledToGrass;
     IWorldMap map;
     LinkedList<Vector2d> fertileFields=new LinkedList<>();
     LinkedList<Vector2d> remainingFields=new LinkedList<>();
-    public GrassFactory(IWorldMap map, CONSTANT constant,MapStats mapStats){
+    public GrassFactory(IWorldMap map, CONSTANT constant){
         this.map=map;
         this.CONSTANT=constant;
-        this.mapStats=mapStats;
         this.grassFieldVariant = CONSTANT.grassFieldVariant;
+        this.NumberOfFiledToGrass= CONSTANT.NUMBEROFGRASSTOGROW;
     }
     public void generateGrass(){
         setFieldsStatus();
-        int numberOfFields=(map.getEndOfMap().x()+1)*(map.getEndOfMap().y()+1);
-        int NumberOfFiledToGrass=numberOfFields/5;
         System.out.println(NumberOfFiledToGrass);
         Vector2d fieldToGrowGrass;
         int i=0;
+        Collections.shuffle(fertileFields);
+        Collections.shuffle(remainingFields);
         while(i<NumberOfFiledToGrass){
             if(!fertileFields.isEmpty()&&!remainingFields.isEmpty()){
                 int randomInt=(int)(Math.random()*5);
@@ -47,12 +47,15 @@ public class GrassFactory {
                 }
             }
             i++;
+            System.out.println(fieldToGrowGrass.toString()+' '+map.grassStatus((fieldToGrowGrass)));
             map.updateGrassField(fieldToGrowGrass);
-            System.out.println(fieldToGrowGrass.toString());
+
         }
     }
 
     private void setFieldsStatus(){
+        fertileFields.clear();
+        remainingFields.clear();
         if(grassFieldVariant==GrassFieldVariants.EquatorBiased){
             int middleOfTheMap=(map.getEndOfMap().y()+1)/2;
             int range=(map.getEndOfMap().y()+1)/10;
@@ -72,7 +75,6 @@ public class GrassFactory {
             }
         }else if(grassFieldVariant==GrassFieldVariants.DeathBiased){
             ArrayList<Vector2d> allFields = new ArrayList<>();
-            int numberOfTakingFields=((map.getEndOfMap().x()+1)*(map.getEndOfMap().y()+1)*2)/10;
             for(int i=0;i<=map.getEndOfMap().x();i++){
                 for(int j=0;j<=map.getEndOfMap().y();j++){
                     if(map.grassStatus(new Vector2d(i,j))){
@@ -100,9 +102,9 @@ public class GrassFactory {
                     return 0;
                 }
             });
-            numberOfTakingFields=Math.min(numberOfTakingFields, allFields.size());
-            fertileFields= new LinkedList<>(allFields.subList(0, numberOfTakingFields));
-            remainingFields=new LinkedList<>(allFields.subList(numberOfTakingFields, allFields.size()));
+            int realNumberGrassToGrow=Math.min(NumberOfFiledToGrass, allFields.size());
+            fertileFields= new LinkedList<>(allFields.subList(0, realNumberGrassToGrow));
+            remainingFields=new LinkedList<>(allFields.subList(realNumberGrassToGrow, allFields.size()));
         }
     }
 }
