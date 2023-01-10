@@ -37,7 +37,7 @@ public class Simulation implements Runnable{
     public void run() {
         for(int i=0;i<numberOfAnimalToAdd;i++){
             if (continuation){ break; }
-            Animal animal=new Animal(map,new Vector2d((int)(Math.random()*map.getEndOfMap().x()),(int)(Math.random()*map.getEndOfMap().y())), MapDirection.NORTH,CONSTANT.PLUSENERGY*5,CONSTANT,0);
+            Animal animal=new Animal(map,new Vector2d((int)(Math.random()*map.getEndOfMap().x()),(int)(Math.random()*map.getEndOfMap().y())), MapDirection.NORTH,CONSTANT.STARTINGENERGY,CONSTANT,0);
             System.out.println(animal.getPosition());
             map.placeAnimal(animal);
         }
@@ -51,9 +51,9 @@ public class Simulation implements Runnable{
             map.removeDeadAnimals();
             map.moveAnimals();
             map.upadteMap();
+            map.removeDeadAnimals();
             map.countFreeSpaces();
             map.setMeanNumberOfChildren();
-            map.removeDeadAnimals();
             map.setAverageEnergy();
             mapRefresh();
         }

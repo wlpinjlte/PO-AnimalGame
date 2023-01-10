@@ -148,9 +148,7 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
                 Vector2d fieldToUpdate=new Vector2d(i,j);
                 LinkedList<Animal>copyMapValue=(LinkedList<Animal>) animalMap.get(fieldToUpdate).clone();
                 for(Animal animal:copyMapValue) {
-                    if(animal.getNumberOfChildren()>0) {
-                        val += animal.getNumberOfChildren();
-                    }
+                    val += animal.getNumberOfChildren();
                     cnt+=1;
                 }
             }

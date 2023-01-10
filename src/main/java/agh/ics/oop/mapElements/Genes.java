@@ -3,6 +3,7 @@ package agh.ics.oop.mapElements;
 import agh.ics.oop.CONSTANT;
 import agh.ics.oop.auxiliary.MutationVariants;
 
+import java.util.Collections;
 import java.util.LinkedList;
 
 public class Genes {
@@ -67,29 +68,32 @@ public class Genes {
     }
 
     public void mutate(){
-        double mutationFactor = Math.random();
-        for (int l=genomeLength-1;l>=0;l--){
-            if(Math.random()>=mutationFactor){
+        int maxmutations=CONSTANT.MAXMUTATIONS;
+        LinkedList<Integer> mutatedGenome = new LinkedList<>();
+        for (int i=0;i<genomeLength;i++){
+            mutatedGenome.add(i);
+        }
+        Collections.shuffle(mutatedGenome);
+        for (int l=0;l<maxmutations && l<genomeLength;l++){
                 if(mutationVariant==MutationVariants.PartialRandomization){
-                    if(genome.get(l)==0){
-                        genome.set(l,1);
+                    if(genome.get(mutatedGenome.get(l))==0){
+                        genome.set(mutatedGenome.get(l),1);
                     }
-                    else if (genome.get(l)==8){
-                        genome.set(l,7);
+                    else if (genome.get(mutatedGenome.get(l))==8){
+                        genome.set(mutatedGenome.get(l),7);
                     }
                     else{
                         if((Math.random())>0.5){
-                            genome.set(l,genome.get(l)+1);
+                            genome.set(l,genome.get(mutatedGenome.get(l))+1);
                         }
                         else{
-                            genome.set(l,genome.get(l)-1);
+                            genome.set(l,genome.get(mutatedGenome.get(l))-1);
                         }
                     }
                 }
                 else if(mutationVariant==MutationVariants.FullRandomization){
-                    genome.set(l,(int)(Math.random()*8));
+                    genome.set(mutatedGenome.get(l),(int)(Math.random()*8));
                 }
             }
         }
-    }
 }

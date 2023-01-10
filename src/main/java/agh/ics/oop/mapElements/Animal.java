@@ -69,7 +69,7 @@ public class Animal implements IMapElement {
             orientation = orientation.next(orientation);
         }
         addToSurvivalCounter();
-        changeEnergy(-CONSTANT.PLUSENERGY/2);
+        changeEnergy(-CONSTANT.COSTTOMOVE);
         positionChanged(position, position.add(orientation.toUnitVector()));
     }
     public void addToSurvivalCounter(){
@@ -128,7 +128,7 @@ public class Animal implements IMapElement {
 
     //jezeli nie maja energii zwroc null w przeciwnym przypadku usun energie rodzica i zrob dziecko, zwroc dziecko
     public Animal procreate(Animal parent1, Animal parent2,int dayOfBirth) {
-        if (parent1.getEnergy() >= CONSTANT.COSTTOCONCIEVECHILDREN && parent2.getEnergy() >= CONSTANT.COSTTOCONCIEVECHILDREN) {
+        if (parent1.getEnergy() >= CONSTANT.MINIMALENERGYTOPROCREATE && parent2.getEnergy() >= CONSTANT.MINIMALENERGYTOPROCREATE) {
             int geneShare = (int)((float)parent1.getEnergy() / ((float)parent1.getEnergy() + (float)parent2.getEnergy()) * 100);
             Animal child = new Animal(map, parent1.getPosition(), parent1.getOrientation(), CONSTANT.COSTTOCONCIEVECHILDREN * 2, CONSTANT, parent1.getGenome(), parent2.getGenome(), geneShare,dayOfBirth);
             child.getGenome().mutate();

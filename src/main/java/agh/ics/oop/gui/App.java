@@ -41,13 +41,18 @@ public class App extends Application implements IMapRefreshObserver{
     private MutationVariants localMutationVariant=MutationVariants.FullRandomization;
     private GrassFieldVariants localGrassFieldVariant=GrassFieldVariants.EquatorBiased;
     private GenomeVariants localGenomeVariant=GenomeVariants.GodsPlan;
-    public int localPlusEnergy=10;
-    public int localCostToConcieveChildren=25;
-    public int localGenomeLength=16;
+    private int localPlusEnergy=10;
+    private int localCostToConcieveChildren=25;
+    private int localGenomeLength=16;
     //ms
-    public int localMoveDelay=1000;
-    public int localSimulationLength=100;
-    public int localAmountOfAnimals=10;
+    private int localMoveDelay=1000;
+    private int localSimulationLength=100;
+    private int localAmountOfAnimals=10;
+    private int localMinimalEnergyToProcreate=40;
+    private int localCostToMove=5;
+    private int localStartingEnergy=50;
+    private int localMapSize=15;
+    private int localMaximumMutations=16;
     private Thread simulationThread;
     @Override
     public void start(Stage primaryStage) {
@@ -128,12 +133,17 @@ public class App extends Application implements IMapRefreshObserver{
         configScreen.add(button7,0,7,1,1);
         configScreen.add(button8,1,7,1,1);
 
-        Text text1 = new Text("Energy yield from eating grass:");
+        Text text1 = new Text("Energy yield from eating grass");
         Text text2 = new Text("Energy cost to procreate");
         Text text3 = new Text("Genome length");
         Text text4 = new Text("Move delay");
         Text text5 = new Text("Number of moves");
         Text text6 = new Text("Number of animals");
+        Text text7 = new Text("Minimal energy to procreate");
+        Text text8 = new Text("Cost to move");
+        Text text9 = new Text("Starting energy");
+        Text text10 = new Text("Map size");
+        Text text11 = new Text("Maximal amount of mutation");
 
         TextField pEnergyTF = new TextField("10");
         configScreen.add(pEnergyTF,1,8,1,1);
@@ -151,8 +161,23 @@ public class App extends Application implements IMapRefreshObserver{
         configScreen.add(simLenTF,1,12,1,1);
         configScreen.add(text5,0,12,1,1);
         TextField amAnimTF = new TextField("10");
-        configScreen.add(amAnimTF,1,13,1,1);
-        configScreen.add(text6,0,13,1,1);
+        configScreen.add(amAnimTF,1,14,1,1);
+        configScreen.add(text6,0,14,1,1);
+        TextField minEnP = new TextField("40");
+        configScreen.add(minEnP,1,15,1,1);
+        configScreen.add(text7,0,15,1,1);
+        TextField CtM = new TextField("5");
+        configScreen.add(CtM,1,16,1,1);
+        configScreen.add(text8,0,16,1,1);
+        TextField stEn = new TextField("50");
+        configScreen.add(stEn,1,17,1,1);
+        configScreen.add(text9,0,17,1,1);
+        TextField mapSize = new TextField("15");
+        configScreen.add(mapSize,1,18,1,1);
+        configScreen.add(text10,0,18,1,1);
+        TextField maxmut = new TextField("16");
+        configScreen.add(maxmut,1,19,1,1);
+        configScreen.add(text11,0,19,1,1);
 
         Button button = new Button("Start the simulation");
         button.setOnAction(event -> {
@@ -162,11 +187,16 @@ public class App extends Application implements IMapRefreshObserver{
             localAmountOfAnimals=Integer.parseInt(amAnimTF.getText());
             localSimulationLength=Integer.parseInt(simLenTF.getText());
             localMoveDelay=Integer.parseInt(moveDelTF.getText());
+            localMinimalEnergyToProcreate=Integer.parseInt(minEnP.getText());
+            localCostToMove=Integer.parseInt(CtM.getText());
+            localStartingEnergy=Integer.parseInt(stEn.getText());
+            localMapSize=Integer.parseInt(mapSize.getText());
+            localMaximumMutations=Integer.parseInt(maxmut.getText());
             initializeCONSTANTandStart();
         });
 
-        configScreen.add(button,3,14);
-        Scene scene1 = new Scene(configScreen,640,640);
+        configScreen.add(button,3,20);
+        Scene scene1 = new Scene(configScreen,640,960);
         primaryStage.setScene(scene1);
         primaryStage.show();
 
@@ -175,13 +205,16 @@ public class App extends Application implements IMapRefreshObserver{
 
     private void initializeCONSTANTandStart(){
 
-        CONSTANT constant = new CONSTANT(localPlusEnergy,localCostToConcieveChildren,localGenomeLength,localMoveDelay,localSimulationLength,localAmountOfAnimals,localMapVariant,localGenomeVariant,localMutationVariant,localGrassFieldVariant);
-        mapStats = new MapStats(constant,15*15);
+        CONSTANT constant = new CONSTANT(localPlusEnergy,localCostToConcieveChildren
+                ,localGenomeLength,localMoveDelay,localSimulationLength,localAmountOfAnimals,localMapVariant
+                ,localGenomeVariant,localMutationVariant,localGrassFieldVariant,localCostToMove,localMinimalEnergyToProcreate,
+                localStartingEnergy,localMapSize, localMaximumMutations);
+        mapStats = new MapStats(constant,localMapSize*localMapSize);
         if(constant.mapVariant==MapVariants.GlobeMap){
-            map=new GlobeMap(15,15,constant,mapStats);
+            map=new GlobeMap(localMapSize,localMapSize,constant,mapStats);
         }
         else if(constant.mapVariant==MapVariants.HellPortal){
-            map=new HellPortal(15,15,constant,mapStats);
+            map=new HellPortal(localMapSize,localMapSize,constant,mapStats);
         }
 
         try {
@@ -232,63 +265,63 @@ public class App extends Application implements IMapRefreshObserver{
         }
         Text text1=new Text("Animal Count: ");
         Text text11=new Text(Integer.toString(mapStats.getAmountOfAnimals()));
-        gridPane.add(text1,0,16);
-        gridPane.add(text11,4,16);
+        gridPane.add(text1,0,localMapSize+1);
+        gridPane.add(text11,4,localMapSize+1);
         Text text2=new Text("Grass Count: ");
         Text text21=new Text(Integer.toString(mapStats.getAmountOfGrass()));
-        gridPane.add(text2,0,17);
-        gridPane.add(text21,4,17);
+        gridPane.add(text2,0,localMapSize+2);
+        gridPane.add(text21,4,localMapSize+2);
         Text text3=new Text("Dead animals count: ");
         Text text31=new Text(Integer.toString(mapStats.getAmountOfDeadAnimals()));
-        gridPane.add(text3,0,18);
-        gridPane.add(text31,4,18);
+        gridPane.add(text3,0,localMapSize+3);
+        gridPane.add(text31,4,localMapSize+3);
         Text text4=new Text("free Spaces: ");
         Text text41=new Text(Integer.toString(mapStats.getFreeSpaces()));
-        gridPane.add(text4,0,19);
-        gridPane.add(text41,4,19);
+        gridPane.add(text4,0,localMapSize+4);
+        gridPane.add(text41,4,localMapSize+4);
         Text text5=new Text("average energy: ");
         Text text51=new Text(Double.toString(mapStats.getAverageEnergy()));
-        gridPane.add(text5,0,20);
-        gridPane.add(text51,4,20);
+        gridPane.add(text5,0,localMapSize+5);
+        gridPane.add(text51,4,localMapSize+5);
         Text text6=new Text("average lifespan: ");
         Text text61=new Text(Double.toString(mapStats.getAverageLifespan()));
-        gridPane.add(text6,0,21);
-        gridPane.add(text61,4,21);
+        gridPane.add(text6,0,localMapSize+6);
+        gridPane.add(text61,4,localMapSize+6);
         Text text7=new Text("average numberOfChildren: ");
         Text text71=new Text(Double.toString(mapStats.getAverageNumberOfChildren()));
-        gridPane.add(text7,0,22);
-        gridPane.add(text71,4,22);
+        gridPane.add(text7,0,localMapSize+7);
+        gridPane.add(text71,4,localMapSize+7);
         if(chosenAnimal!=null) {
             Text text8 = new Text("genome: ");
             Text text81 = new Text(chosenAnimal.getGenome().toString());
-            gridPane.add(text8, 6, 16);
-            gridPane.add(text81, 8, 16);
+            gridPane.add(text8, 6, localMapSize+1);
+            gridPane.add(text81, 8, localMapSize+1);
             Text text9 = new Text("active gene:");
             Text text91 = new Text(Integer.toString(chosenAnimal.getGenome().getGene(chosenAnimal.getDaysAlive() % chosenAnimal.getGenome().getGenomeLength())));
-            gridPane.add(text9, 6, 17);
-            gridPane.add(text91, 8, 17);
+            gridPane.add(text9, 6, localMapSize+2);
+            gridPane.add(text91, 8, localMapSize+2);
             Text text10 = new Text("energy: ");
             Text text101 = new Text(Integer.toString(chosenAnimal.getEnergy()));
-            gridPane.add(text10, 6, 18);
-            gridPane.add(text101, 8, 18);
+            gridPane.add(text10, 6, localMapSize+3);
+            gridPane.add(text101, 8, localMapSize+3);
             Text text111 = new Text("grass eaten: ");
             Text text1111 = new Text(Integer.toString(chosenAnimal.getAmountOfGrassEaten()));
-            gridPane.add(text111, 6, 19);
-            gridPane.add(text1111, 8, 19);
+            gridPane.add(text111, 6, localMapSize+4);
+            gridPane.add(text1111, 8, localMapSize+4);
             Text text12 = new Text("children: ");
             Text text121 = new Text(Integer.toString(chosenAnimal.getNumberOfChildren()));
-            gridPane.add(text12, 6, 20);
-            gridPane.add(text121, 8, 20);
+            gridPane.add(text12, 6, localMapSize+5);
+            gridPane.add(text121, 8, localMapSize+5);
             if (!chosenAnimal.ifDied()) {
                 Text text13 = new Text("days alive: ");
                 Text text131 = new Text(Integer.toString(chosenAnimal.getDaysAlive()));
-                gridPane.add(text13, 6, 21);
-                gridPane.add(text131, 8, 21);
+                gridPane.add(text13, 6, localMapSize+6);
+                gridPane.add(text131, 8, localMapSize+6);
             } else {
                 Text text14 = new Text("date of death: ");
                 Text text141 = new Text(Integer.toString(chosenAnimal.getDateOfDeath()));
-                gridPane.add(text14, 6, 21);
-                gridPane.add(text141, 8, 21);
+                gridPane.add(text14, 6, localMapSize+7);
+                gridPane.add(text141, 8, localMapSize+7);
             }
         }
 
@@ -296,17 +329,17 @@ public class App extends Application implements IMapRefreshObserver{
         Button stop = new Button("stop");
         Button start = new Button("start");
         if(!isStopped){
-            gridPane.add(stop,12,23);
+            gridPane.add(stop,12,localMapSize+8);
         }
         else{
-            gridPane.add(start,12,23);
+            gridPane.add(start,12,localMapSize+8);
         }
 
         stop.setOnAction(event->{
             simulationThread.interrupt();
             isStopped=true;
             gridPane.getChildren().remove(stop);
-            gridPane.add(start,12,23);
+            gridPane.add(start,12,localMapSize+8);
         });
         start.setOnAction(event->{
             this.simulation.setContinuationTrue();
@@ -314,7 +347,7 @@ public class App extends Application implements IMapRefreshObserver{
             isStopped=false;
             simulationThread.start();
             gridPane.getChildren().remove(start);
-            gridPane.add(stop,12,23);
+            gridPane.add(stop,12,localMapSize+8);
         });
     }
     @Override
